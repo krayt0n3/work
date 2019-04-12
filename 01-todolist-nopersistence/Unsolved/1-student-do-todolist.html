@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html lang="en-us">
+
+<head>
+
+  <meta charset="UTF-8">
+  <title>To Do App!</title>
+
+  <style>
+    #todo-item {
+      font-weight: 700;
+      font-size: 2em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Title -->
+  <h1>To Do List with Persisted Local Storage</h1>
+
+  <!-- Input Form -->
+  <form>
+    <span id="todo-item">To Do Item: <input id="to-do" type="text"><input id="add-to-do" value="Add Item"
+        type="submit"></span>
+  </form>
+
+  <hr>
+
+  <!-- To-Do List -->
+  <div id="to-dos"></div>
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Script -->
+  <script>
+
+    var $ToDo = $('#to-dos');
+    var $ToDoInput = $('#to-do');
+
+    function makeTodo(todoText, i){
+      return `
+        <p data-id=${i}>
+          <button data-id=${i} class="checkbox">✓</button>
+          ${todoText}
+        </p>
+      `
+    }
+
+    var todos = JSON.parse(localStorage.getItem('todoList')) || [];
+
+    // var todos = [];
+    $ToDo.html(todos.map(makeTodo))
+
+    $("#add-to-do").on("click", function (event) {
+      event.preventDefault();
+      var todoText = $ToDoInput.val();
+      
+      
+      
+      // $ToDo.append(makeTodo(todoText, todos.length ))
+      todos.push(todoText)
+      $ToDo.html(todos.map(makeTodo))
+      
+
+      localStorage.setItem('todoList', JSON.stringify(todos))
+      $ToDoInput.val("");
+
+    });
+
+    $(document.body).on("click", ".checkbox", function () {
+      var id = parseInt($(this).data('id'));
+      todos.splice(id,1);
+      $(this).closest('p').remove();
+      localStorage.setItem('todoList', JSON.stringify(todos))
+    });
+  </script>
+
+</body>
+
+</html>
